@@ -10,3 +10,7 @@ There is a Makefile that should help the extensibility of this service, if you r
 
 To create a new cobra command you should execute `cobra-cli add <command>`
 More documentation [here](https://cobra.dev/docs/)
+
+## Reflection on gRPC server
+
+To be able to exercise the application with a cli client the server must enable reflection.

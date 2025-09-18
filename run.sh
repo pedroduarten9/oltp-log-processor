@@ -1,4 +1,4 @@
 #!/bin/bash
 set -e
 
-docker run --rm log-processor serve
+docker run --rm -d --name log-processor log-processor serve "$@"

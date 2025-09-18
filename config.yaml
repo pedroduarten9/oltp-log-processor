@@ -1,0 +1,5 @@
+listenAddr: "localhost:4317"
+maxReceiveMessageSize: 16777216
+windowSeconds: 5
+attrKey: "foo"
+logLevel: "DEBUG"

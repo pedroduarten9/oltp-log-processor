@@ -14,6 +14,7 @@ FROM gcr.io/distroless/base
 WORKDIR /
 
 COPY --from=build-stage --chown=serve:serve /app/serve .
+COPY --from=build-stage --chown=serve:serve /app/config.yaml .
 
 USER nonroot:nonroot
 

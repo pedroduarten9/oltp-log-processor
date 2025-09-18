@@ -1,0 +1,132 @@
+{
+  "resourceLogs": [
+    {
+      "resource": {
+        "attributes": [
+          {
+            "key": "foo",
+            "value": {
+              "stringValue": "resource_value"
+            }
+          }
+        ]
+      }
+    }, 
+    {
+      "resource": {
+        "attributes": [
+          {
+            "key": "foo",
+            "value": {
+              "stringValue": "resource_value"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+      },
+      "scopeLogs": [
+        {
+          "scope": {
+            "attributes": [
+              {
+                "key": "foo",
+                "value": {
+                  "stringValue": "scope_value"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },    
+    {
+      "scopeLogs": [
+        {
+          "logRecords": [
+            {
+              "attributes": [
+                {
+                  "key": "foo",
+                  "value": {
+                    "stringValue": "log_value"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "resource": {
+      },
+      "scopeLogs": [
+        {
+          "scope": {
+            "attributes": [
+              {
+                "key": "bar_scope",
+                "value": {
+                  "stringValue": "scope_value"
+                }
+              }
+            ]
+          },
+          "logRecords": [
+            {
+              "attributes": [
+                {
+                  "key": "bar_record",
+                  "value": {
+                    "stringValue": "log_value"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "resource": {
+        "attributes": [
+          {
+            "key": "baz",
+            "value": {
+              "stringValue": "resource_value_baz"
+            }
+          }
+        ]
+      },
+      "scopeLogs": [
+        {
+          "scope": {
+            "attributes": [
+              {
+                "key": "baz",
+                "value": {
+                  "stringValue": "scope_value_baz"
+                }
+              }
+            ]
+          },
+          "logRecords": [
+            {
+              "attributes": [
+                {
+                  "key": "baz",
+                  "value": {
+                    "stringValue": "log_value_baz"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
