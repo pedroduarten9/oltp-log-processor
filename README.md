@@ -11,7 +11,11 @@ It encompasses documentation that helps extend this service and facilitates its 
 
 The decisions taken along the challenge will be documented [here](./docs/decisions.md)
 
-## Flags
+## Next steps
+
+The next steps for the challenge will be documented [here](./docs/next-steps.md)
+
+## Flags (Configurability)
 
 The configurable attributes `window in seconds` and `attribute key` can be configured either by changing the values on the `config.yaml` file or by passing flags via command line to the executable.
 Flags:
