@@ -14,6 +14,12 @@ We should secure the server with TLS.
 
 Priority: P0
 
+## Log level (Severity)
+
+We should "fix" the log level being configurable with Otel, I didn't have time to investigate further, therefore, right now it's not configurable.
+
+Priority: P0
+
 ## Monitoring
 
 We should be able to monitor this service to understand it's health. We should check for it's load, validate it's data sources...

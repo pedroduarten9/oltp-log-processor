@@ -2,7 +2,6 @@ package logs
 
 import (
 	"context"
-	"log/slog"
 
 	collogspb "go.opentelemetry.io/proto/otlp/collector/logs/v1"
 )
@@ -20,8 +19,6 @@ func NewServer(logProcessor *LogProcessor) collogspb.LogsServiceServer {
 }
 
 func (l *dash0LogsServiceServer) Export(ctx context.Context, request *collogspb.ExportLogsServiceRequest) (*collogspb.ExportLogsServiceResponse, error) {
-	slog.DebugContext(ctx, "Received ExportLogsServiceRequest")
-
 	for _, resourceLogs := range request.ResourceLogs {
 		l.logProcessor.ProcessLog(resourceLogs)
 	}
