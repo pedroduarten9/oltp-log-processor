@@ -2,12 +2,14 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log/slog"
 	"net"
 	"os"
 	"os/signal"
 	"pedroduarten9/oltp-log-processor/pkg/logs"
+	"pedroduarten9/oltp-log-processor/pkg/otel"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -19,6 +21,8 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+const name = "dash0.com/otlp-log-processor-backend"
+
 var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "A grpc server for the log service",
@@ -27,21 +31,32 @@ var serveCmd = &cobra.Command{
 		maxReceiveMessageSize := viper.GetInt("maxReceiveMessageSize")
 		attrKey := viper.GetString("attrKey")
 		listenAddr := viper.GetString("listenAddr")
-		logLevelCfg := viper.GetString("logLevel")
 
-		logLevel := *new(slog.Level)
-		if err := logLevel.UnmarshalText([]byte(logLevelCfg)); err != nil {
-			logLevel = slog.LevelInfo
+		// Set up OpenTelemetry.
+		otelShutdown, err := otel.SetupOTelSDK(cmd.Context())
+		if err != nil {
+			return
 		}
-		logger := slog.New(slog.NewJSONHandler(
-			os.Stdout,
-			&slog.HandlerOptions{Level: logLevel}))
-		slog.SetDefault(logger)
+
+		// Handle shutdown properly so nothing leaks.
+		defer func() {
+			err = errors.Join(err, otelShutdown(cmd.Context()))
+			slog.Error("error encountered", "err", err)
+		}()
+
+		otelConfig := otel.NewConfig(name)
+		slog.SetDefault(otelConfig.Logger)
 
 		repo := logs.NewRepo()
 		logProcessor := logs.NewLogProcessor(attrKey, repo)
+		logsServer, err := logs.NewOtelServer(logs.NewServer(logProcessor), otelConfig)
+		if err != nil {
+			slog.Error("failed to create logs server")
+			return
+		}
+
 		ctx, cancel := signal.NotifyContext(cmd.Context(), os.Interrupt, os.Kill)
-		start(ctx, logProcessor, logger, windowSeconds)
+		start(ctx, logProcessor, otelConfig.Logger, windowSeconds)
 
 		slog.Debug("Starting listener", slog.String("listenAddr", listenAddr))
 		listener, err := net.Listen("tcp", listenAddr)
@@ -55,7 +70,8 @@ var serveCmd = &cobra.Command{
 			grpc.MaxRecvMsgSize(maxReceiveMessageSize),
 			grpc.Creds(insecure.NewCredentials()),
 		)
-		collogspb.RegisterLogsServiceServer(grpcServer, logs.NewServer(logProcessor))
+
+		collogspb.RegisterLogsServiceServer(grpcServer, logsServer)
 
 		reflection.Register(grpcServer)
 		slog.Debug("Starting gRPC server")
