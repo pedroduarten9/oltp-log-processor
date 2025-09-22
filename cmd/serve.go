@@ -41,6 +41,7 @@ var serveCmd = &cobra.Command{
 		// Handle shutdown properly so nothing leaks.
 		defer func() {
 			err = errors.Join(err, otelShutdown(cmd.Context()))
+			slog.Error("error encountered", "err", err)
 		}()
 
 		otelConfig := otel.NewConfig(name)
